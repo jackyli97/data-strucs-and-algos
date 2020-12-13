@@ -48,11 +48,26 @@ function minChange(coins, amount, memo = {}) {
         let calc = amount - coins[i];
         if (calc >= 0){
             let recursive = count + minChange(coins, calc, memo);
-            memo[amount] = recursive;
             result.push(recursive)
         } 
     }
-    return Math.min(...result);
+    let minResult = Math.min(...result);
+    memo[amount] = minResult
+    return minResult;
+
+    // if (amount in memo) return memo[amount];
+    // if (amount === 0) return 0;
+    // let result = 0;
+    // for (let i = 0; i < coins.length; i++) {
+    //     let count = 1;
+    //     let calc = amount - coins[i];
+    //     if (calc >= 0) {
+    //         let recursive = count + minChange(coins, calc, memo);
+    //         if (recursive < result || result === 0) result = recursive;
+    //     }
+    // }
+    // memo[amount] = result;
+    // return result;
 }
 
 module.exports = {
