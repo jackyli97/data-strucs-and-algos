@@ -40,22 +40,19 @@ function lucasNumberMemo(n, memo = {}) {
 // minChange([1, 5, 10, 25], 15)    // => 2, because 10 + 5 = 15
 // minChange([1, 5, 10, 25], 100)   // => 4, because 25 + 25 + 25 + 25 = 100
 function minChange(coins, amount, memo = {}) {
-    let sorted = coins.sort().reverse();
-    for (let i=0;i<sorted.length;i++){
+    if (amount in memo) return memo[amount];
+    if (amount === 0) return 0;
+    let result = [];
+    for (let i=0;i<coins.length;i++){
         let count = 1;
-        let calc = amount - sorted[i];
-        if (calc === 0)return count;
-    }
-    let result = 0;
-    for (let i=0;i<sorted.length;i++){
-        let count = 1;
-        let calc = amount - sorted[i];
-        if (calc > 0){
-            let recursive = count + minChange(coins, calc);
-            if (recursive < result || result === 0) result = recursive;
+        let calc = amount - coins[i];
+        if (calc >= 0){
+            let recursive = count + minChange(coins, calc, memo);
+            memo[amount] = recursive;
+            result.push(recursive)
         } 
     }
-    return result;
+    return Math.min(...result);
 }
 
 module.exports = {
