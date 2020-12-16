@@ -47,7 +47,7 @@ function minChange(coins, amount, memo = {}) {
         let count = 1;
         let calc = amount - coins[i];
         if (calc >= 0){
-            let recursive = count + minChange(coins, calc, memo);
+            let recursive = count + minChange(coins, calc,  memo);
             result.push(recursive)
         } 
     }
