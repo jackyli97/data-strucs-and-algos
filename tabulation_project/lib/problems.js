@@ -21,7 +21,17 @@
 // stepper([3, 4, 1, 0, 10]);           // => true, because we can step through elements 3 -> 4 -> 10
 // stepper([2, 3, 1, 1, 0, 4, 7, 8])    // => false, there is no way to step to the end
 function stepper(nums) {
-
+    let visited = Array(nums.length).fill(false);
+    visited[0] = true;
+    for(let i=0; i<nums.length; i++) {
+        if (visited[i] && (i+nums[i] >= nums.length - 1)) return true;
+        else if (visited[i]){
+            for (let j=i; j<=i+nums[i]; j++){
+                visited[j] = true;
+            }
+        }
+    }
+    return visited[visited.length - 1];
 }
 
 
