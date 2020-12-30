@@ -46,7 +46,32 @@ function stepper(nums) {
 // maxNonAdjacentSum([2, 7, 9, 3, 4])   // => 15, because 2 + 9 + 4
 // maxNonAdjacentSum([4,2,1,6])         // => 10, because 4 + 6 
 function maxNonAdjacentSum(nums) {
+    if (nums.length === 1 || nums.length === 2) return Math.max(...nums);
+    if (nums.length === 0) return 0;
+    let tabArr = Array(nums.length).fill(0);
+    tabArr[nums.length - 1] = nums[nums.length - 1];
+    tabArr[nums.length - 2] = nums[nums.length - 2];
 
+    for (let i=nums.length - 3; i>=0;i--){
+        let max = 0;
+        for (let j=i+2;j<nums.length;j++){
+            max = tabArr[j] > max ? tabArr[j] : max;
+        }
+        tabArr[i] = nums[i] + max;
+    }
+    return Math.max(...tabArr);
+    // if (nums in memo) return memo[nums];
+    // if (nums.length === 1) return nums[0];
+    // if (nums.length === 0) return 0;
+    // let sums = [];
+    
+    // for (let i=0; i<nums.length; i++){
+    //     if (i === nums.length - 1 || i === nums.length - 2) sums.push(nums[i]);
+    //     else sums.push(nums[0] + maxNonAdjacentSum(nums.slice(i+2, nums.length), memo));
+    // }
+    // let max = Math.max(...sums);
+    // memo[nums] = max;
+    // return max;
 }
 
 
@@ -63,7 +88,15 @@ function maxNonAdjacentSum(nums) {
 // minChange([1, 5, 10, 25], 15)    // => 2, because 10 + 5 = 15
 // minChange([1, 5, 10, 25], 100)   // => 4, because 25 + 25 + 25 + 25 = 100
 function minChange(coins, amount) {
-
+    
+    let table = Array(amount+1).fill(Infinity);
+    table[0] = 0;
+    for(let i=0;i<coins.length;i++){
+        for(let j=0; j<table.length;j++){
+            if (coins[i] <= j) table[j] = Math.min(table[j], 1+table[j-coins[i]]);
+        }
+    }
+    return table[table.length-1];
 }
 
 
