@@ -23,7 +23,7 @@
 // TODO: Implement a Linked List Node class here
 class Node {
     constructor(val) {
-
+//
     }
 
 }
