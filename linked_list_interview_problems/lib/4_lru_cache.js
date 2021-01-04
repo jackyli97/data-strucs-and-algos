@@ -68,6 +68,8 @@ class LRUCache {
   constructor(limit) {
     this.limit = limit;
     this.items = {};
+
+    this.list = new List;
   }
 
   // TODO: Implement the size method here
@@ -77,24 +79,48 @@ class LRUCache {
 
   // TODO: Implement the get method here
   get(key) {
-
+    let node = this.items[key];
+    if (!node) return null;
+    this.promote(node);
+    return node.val;
   }
 
   // TODO: Implement the set method here
   set(key, val) {
-    
+    if (!(key in this.items)){
+      let isFull = this.isFull();
+      if (isFull)this.prune();
+      this.list.push(val);
+      this.items[key] = this.list.tail;
+    }else{
+      let node = this.items[key];
+      node.val = val;
+      this.promote(node);
+    }
+    return true;
   }
 
   isFull() {
-    
+    return this.size() === this.limit;
   }
 
   prune() {
-
+    let lru = this.list.head;
+      this.list.shift();
+      let keys = Object.keys(this.items);
+      lru.delete();
+      for (let i=0; i<keys.length;i++){
+        if (this.items[keys[i]] === lru){
+          delete this.items[keys[i]];
+          return true;
+        }
+      }
+      return false;
   }
 
   promote(item) {
-
+    this.list.moveToEnd(item);
+    return true;
   }
 }
 
