@@ -67,7 +67,7 @@ class LRUCacheItem {
 class LRUCache {
   constructor(limit) {
     this.limit = limit;
-    this.items = {}
+    this.items = {};
   }
 
   // TODO: Implement the size method here
@@ -77,12 +77,12 @@ class LRUCache {
 
   // TODO: Implement the get method here
   get(key) {
-    
+
   }
 
   // TODO: Implement the set method here
   set(key, val) {
-
+    
   }
 
   isFull() {
