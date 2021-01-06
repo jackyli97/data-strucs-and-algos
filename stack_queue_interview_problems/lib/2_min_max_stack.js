@@ -68,6 +68,8 @@ class Node {
     constructor(val) {
         this.value = val;
         this.next = null;
+        this.prevMin = null;
+        this.prevMax = null;
     }
 }
 
@@ -78,8 +80,8 @@ class MinMaxStack {
         this.top = null;
         this.bottom = null;
         this.length = 0;
-        this.min = null;
-        this.max = null;
+        this.minNode = null;
+        this.maxNode = null;
     }
 
     push(val) {
@@ -87,8 +89,18 @@ class MinMaxStack {
         if (!this.top) {
             this.top = newNode;
             this.bottom = newNode;
+            this.minNode = newNode;
+            this.maxNode = newNode;
         } else {
             const temp = this.top;
+            if (newNode.value > this.maxNode.value) {
+                newNode.prevMax = this.maxNode;
+                this.maxNode = newNode;
+            }
+            if (newNode.value < this.minNode.value) {
+                newNode.prevMin = this.minNode;
+                this.minNode = newNode;
+            }
             this.top = newNode;
             this.top.next = temp;
         }
@@ -101,56 +113,30 @@ class MinMaxStack {
         }
         const temp = this.top;
         if (this.top === this.bottom) {
+            this.minNode = null;
+            this.maxNode = null;
             this.bottom = null;
         }
+        if (this.top === this.maxNode) this.maxNode = this.top.prevMax;
+        if (this.top === this.minNode) this.minNode = this.top.prevMin;
         this.top = this.top.next;
         this.length--;
-        return temp.value;
+        return temp;
     }
-
+    
     size() {
         return this.length;
     }
+
+    min() {
+        return this.minNode;
+    }
+    
+    max() {
+        return this.maxNode;
+    }
 }
-
-// class Stack {
-//     constructor() {
-//         this.top = null;
-//         this.bottom = null;
-//         this.length = 0;
-//     }
-
-//     push(val) {
-//         const newNode = new Node(val);
-//         if (!this.top) {
-//             this.top = newNode;
-//             this.bottom = newNode;
-//         } else {
-//             const temp = this.top;
-//             this.top = newNode;
-//             this.top.next = temp;
-//         }
-//         return ++this.length;
-//     }
-
-//     pop() {
-//         if (!this.top) {
-//             return null;
-//         }
-//         const temp = this.top;
-//         if (this.top === this.bottom) {
-//             this.bottom = null;
-//         }
-//         this.top = this.top.next;
-//         this.length--;
-//         return temp.value;
-//     }
-
-//     size() {
-//         return this.length;
-//     }
-// }
 
 // Forgetting something down here? 
 exports.Node = Node;
-exports.Stack = Stack;
+exports.MinMaxStack = MinMaxStack;
