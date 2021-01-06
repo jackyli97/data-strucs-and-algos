@@ -77,6 +77,24 @@
 // -----------
 function balancedParens(str) {
 
+    if (str.length === 0) return true;
+    if (str.length === 1) return false;
+
+    let open = {'{': '}', '[':']', '(':')'};
+    let close = {'}': '{', ']':'[', ')':'('};
+
+    let openStack = Array.from(str);
+    let closeStack = [];
+
+    for (let i=str.length-1; i>= 0; i--){
+        if (str[i] in close) closeStack.push(str[i]);
+        else if (str[i] in open){
+            if (open[str[i]] !== closeStack[closeStack.length -1]) return false;
+            closeStack.pop();
+            openStack.pop();
+        }else openStack.pop();
+    };
+    return closeStack.length === 0;
 }
 
 exports.balancedParens = balancedParens;
