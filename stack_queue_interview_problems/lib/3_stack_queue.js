@@ -79,36 +79,33 @@ class StackQueue {
     }
 
     enqueue(val){
-        let node = new Node(val);
-        if (!this.front){
-            this.front = node;
-            this.back = node;
-        }
-        else{
-            this.back.next = node;
-            this.back = node
-        }
-        this.inStack.push(node);
-        return this.size();
+       let node = new Node(val);
+       if (this.inStack.length === 0) {
+           this.front = node;
+       }
+       if (this.inStack.length === 1) this.front.next = node;
+       this.back = node;
+       this.inStack.push(node);
+       return this.size();
     }
 
     dequeue(){
-       if (!this.front) {
-           return null;
-       } else if (this.size() === 1) {
+       if (this.inStack.length === 0 && this.outStack.length === 0) return null;
+       if (this.inStack.length === 1) {
            this.front = null;
            this.back = null;
-       } else {
-           this.front = this.front.next;
+           return this.inStack.pop();
        }
-
-       if (this.outStack.size() === 0) {
-           while (this.inStack.size() > 0) {
-               this.outStack.push(this.inStack.pop());
+       if (this.outStack.length === 0) {
+           while (this.inStack.length > 0) {
+               let popped = this.inStack.pop();
+               this.outStack.push(popped);
            }
+           this.front = this.outStack.top;
+           this.back = this.outStack.bottom;
        }
-       let x = this.outStack.pop();
-       return x;
+       if (this.outStack.length > 1) this.front = this.front.next;
+       return this.outStack.pop();
     }
 
     size(){
