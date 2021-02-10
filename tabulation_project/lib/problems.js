@@ -88,16 +88,65 @@ function maxNonAdjacentSum(nums) {
 // minChange([1, 5, 10, 25], 15)    // => 2, because 10 + 5 = 15
 // minChange([1, 5, 10, 25], 100)   // => 4, because 25 + 25 + 25 + 25 = 100
 function minChange(coins, amount) {
-    
     let table = Array(amount+1).fill(Infinity);
     table[0] = 0;
-    for(let i=0;i<coins.length;i++){
-        for(let j=0; j<table.length;j++){
-            if (coins[i] <= j) table[j] = Math.min(table[j], 1+table[j-coins[i]]);
+
+    for (let i=0; i<coins.length; i++){
+        for (let j=1; j<table.length;j++){
+
+            if (coins[i] <= j){
+                table[j] = Math.min(table[j], 1 + table[j-coins[i]])
+            }
+            // if (j%coins[i]===0){
+            //     table[j] = Math.min(j / coins[i], table[j]);
+            // }
+            // else if (coins[i] < j){
+            //     let numCoin = Math.floor(j/coins[i]);
+            //     let remainder = j % coins[i];
+            //     table[j] = Math.min(table[j], numCoin + table[remainder]);
+            // }
         }
     }
+
     return table[table.length-1];
 }
+
+// 4 [1,2,3]
+
+// coin=1
+// [0,1,2,3,4]
+
+// coin=2
+// [0,1,1,2,2]
+  // 3 = 2+1---> Math.floor (3/2) + table[3-Math.floor(3/2)]
+
+
+    // slot is 2, 2 - Math.floor(2/2)    
+  
+// coin=3
+// [0,1,1,1,2]
+
+// 4, [1,2,3]
+
+
+
+
+
+
+
+
+
+
+
+    // let table = Array(amount + 1).fill(Infinity);
+    // table[0] = 0;
+    // for (let i = 0; i < coins.length; i++) {
+    //   for (let j = 0; j < table.length; j++) {
+    //     if (coins[i] <= j)
+    //       table[j] = Math.min(table[j], 1 + table[j - coins[i]]);
+    //   }
+    // }
+    // return table[table.length - 1];
 
 
 module.exports = {
