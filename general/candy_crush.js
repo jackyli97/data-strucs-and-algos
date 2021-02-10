@@ -111,79 +111,75 @@ var collapse = function(board, row,col){
 
 // ALT SOLUTION USING MOVING 0S logic
 
-/**
- * @param {number[][]} board
- * @return {number[][]}
- */
-var candyCrush = function(board) {
-//    ERROR CHECKING
-    if (!board) return board;
-    
-    let done=true;
-//     STEP1: CRUSH ROWS
-    for (let i=0; i<board.length; i++){
-        for (let j=0; j<board.length-2; j++){
-//          sliding window
-            let num1 = Math.abs(board[i][j]);
-            let num2 = Math.abs(board[i][j+1]);
-            let num3 = Math.abs(board[i][j+2]);
-            
-            if (num1 === num2 && num1 === num3 && num1 !== 0){
-                done = false;
-                board[i][j] = num1 * -1;
-                board[i][j+1] = num2 * -1;
-                board[i][j+2] = num3 * -1;
-            }
-        }
-    }
-    
-//     STEP2: CRUSH COLS
- 
-        for (let i=0; i<board.length-2; i++){
-            for (let j=0; j<board.length; j++){
-    //          sliding window
-                let num1 = Math.abs(board[i][j]);
-                let num2 = Math.abs(board[i+1][j]);
-                let num3 = Math.abs(board[i+2][j]);
+var candyCrush = function (board) {
+  //    ERROR CHECKING
+  if (!board) return board;
 
-                if (num1 === num2 && num1 === num3 && num1 !== 0){
-                    done = false;
-                    board[i][j] = num1 * -1;
-                    board[i+1][j] = num2 * -1;
-                    board[i+2][j] = num3 * -1;
-                }
-            }
+  let done = true;
+  //     STEP1: CRUSH ROWS
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board.length - 2; j++) {
+      //          sliding window
+      let num1 = Math.abs(board[i][j]);
+      let num2 = Math.abs(board[i][j + 1]);
+      let num3 = Math.abs(board[i][j + 2]);
+
+      if (num1 === num2 && num1 === num3 && num1 !== 0) {
+        done = false;
+        board[i][j] = num1 * -1;
+        board[i][j + 1] = num2 * -1;
+        board[i][j + 2] = num3 * -1;
+      }
+    }
+  }
+
+  //     STEP2: CRUSH COLS
+
+  for (let i = 0; i < board.length - 2; i++) {
+    for (let j = 0; j < board.length; j++) {
+      //          sliding window
+      let num1 = Math.abs(board[i][j]);
+      let num2 = Math.abs(board[i + 1][j]);
+      let num3 = Math.abs(board[i + 2][j]);
+
+      if (num1 === num2 && num1 === num3 && num1 !== 0) {
+        done = false;
+        board[i][j] = num1 * -1;
+        board[i + 1][j] = num2 * -1;
+        board[i + 2][j] = num3 * -1;
+      }
+    }
+  }
+
+  //     GRAVITY
+  // for (let i=0; i<board.length; i++){
+  //     for (let j=0; j<board.length; j++){
+  //         if (board[i][j] < 0){
+  //             collapse(board,i,j);
+  //         }
+  //     }
+  // }
+  if (!done) {
+    for (let col = 0; col < board[0].length; col++) {
+      let index = board.length - 1;
+      for (let row = board.length - 1; row >= 0; row--) {
+        if (board[row][col] > 0) {
+          board[index][col] = board[row][col];
+          index--;
         }
-    
-    
-//     GRAVITY
-        // for (let i=0; i<board.length; i++){
-        //     for (let j=0; j<board.length; j++){
-        //         if (board[i][j] < 0){
-        //             collapse(board,i,j);
-        //         }
-        //     }
-        // }
-        for (let col=0; col<board[0].length;col++){
-            let index=board.length-1;
-            for (let row=board.length-1; row>=0; row--){
-                if (board[row][col] > 0){
-                    board[index][col] = board[row][col];
-                    index--;
-                }
-            }
-            for (let i=index;i>=0; i--){
-                board[i][col] = 0;
-            }
-        }
-    
-    return done ? board : candyCrush(board);
+      }
+      for (let i = index; i >= 0; i--) {
+        board[i][col] = 0;
+      }
+    }
+  }
+
+  return done ? board : candyCrush(board);
 };
 
-var collapse = function(board, row,col){
-    for (let i=row; i>0; i--){
-        board[i][col] = board[i-1][col];
-    }
-    board[0][col] = 0;
-}
-
+var collapse = function (board, row, col) {
+  for (let i = row; i > 0; i--) {
+    board[i][col] = board[i - 1][col];
+  }
+  board[0][col] = 0;
+};
