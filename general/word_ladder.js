@@ -14,29 +14,56 @@ var ladderLength = function(beginWord, endWord, wordList) {
   
     let visited = new Set();
     visited.add(beginWord);
-    min = Infinity;
   
-    climbing(beginWord, endWord, wordSet, visited, min);
-    return isFinite(min) ? min : 0;
+    return climbing(beginWord, endWord, wordSet, visited);
 };
 
 var climbing = function(word, targetWord, wordSet, visited) {
-  if (word === targetWord) return 1;
   
-  for (let i=0; i<word.length; i++){
-    let count = 1;
-    
-    let newWords = getNewWords(word.split(""), i, wordSet, visited);
-    if (newWords.length === 0) continue;
-    for (let j=0; j<newWords.length; j++){
-      count += climbing(newWords[j], targetWord, wordSet, visited);
-      if (count > 0){
-        min = Math.min(min, count);
+  let queue = [];
+  let numWords = 0;
+  queue.push(word);
+  
+  while (queue.length){
+    numWords++;
+    let size = queue.length;
+    while (size > 0) {
+      let currWord = queue.shift();
+      
+      for (let i=0; i<currWord.length;i++){
+        let newWords = getNewWords(currWord.split(""), i, wordSet, visited);
+        for (let j=0; j<newWords.length;j++){
+          let newWord = newWords[j];
+          if (newWord === targetWord) return numWords + 1;
+          queue.push(newWord);
+        }
       }
+      size--;      
     }
   }
+  return 0;
+//   // if (word === targetWord){
+//   //   visited.delete(word);
+//   //   return 1; 
+//   // }
+//   let minCount = Infinity
   
-  return count;
+//   for (let i=0; i<word.length; i++){
+//     let newWords = getNewWords(word.split(""), i, wordSet, visited, targetWord);
+//     if (typeof newWords === 'boolean'){
+//       minCount = Math.min(2, minCount);
+//       continue;
+//     }
+//     if (newWords.length === 0) continue;
+//     for (let j=0; j<newWords.length; j++){
+//       let count = 1;
+//       count += climbing(newWords[j], targetWord, wordSet, visited);
+//       if (count > 0){        
+//         minCount = Math.min(minCount, count);
+//       }
+//     }
+//   }
+//   return isFinite(minCount) ? minCount : -1;
 }
 
 var getNewWords = function(word, idx, wordSet, visited) {
@@ -45,7 +72,7 @@ var getNewWords = function(word, idx, wordSet, visited) {
   for (let i=0; i<alpha.length;i++){
     if (alpha[i] === word[idx]) continue;
     word[idx] = alpha[i];
-    let joinedWord = word.join("")
+    let joinedWord = word.join("");
     if (!wordSet.has(joinedWord) || visited.has(joinedWord)) continue;
     visited.add(joinedWord);
     newWords.push(joinedWord);
@@ -82,7 +109,22 @@ add word to visited while finding them as "neighbors"
 hit, this word has 26*3 possibilites,
   each possibility must exist in the wordList
   
-  start with first ele: []
+  start with first ele: [] 
+  
+  WHAT IF ONE PATH ISNT OPTIMAL:
+  I.E. target word is hog, and we have bit as an additional word
+    inthis example
+  bit
+  
+  bot
+  hot
+  hog
+  
+  hot
+  hog
+  
+  -optimal path would be the second letter
+  -so reset visited after each letter
   
   go to second ele: [hot], return 1+4 = 5
 
@@ -93,12 +135,38 @@ dot: first letter: nothing
   third letter: [dog] return 1+2 = 3
 
 dog : first letter: [cog, log], return count + 1 = 2
+  log returns -1, count = 1+-1
 
 cog: matches the endWord, return 1
+
+log: first letter: nothing
+  second letter: nothing
+  third letter: nothing
 
   
     
   
   we want to explore each one of these possibilities
+  
+  
+ALT:
+"hit", "cog"
+["hot","dot","dog","lot","log","cog"]
+visited: ["hit", "dot", "lot"]
+
+level: 2
+queue = ["hot"]
+
+newQueue = ["dot","lot"]
+
+level: 3
+queue = ["dot","lot"]
+
+newQueue = ["dog","log"]
+
+level: 4
+queue = ["dog","log"]
+
+newQueue = ["cog","log"]
 
 */
